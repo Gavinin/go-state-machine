@@ -93,7 +93,7 @@ func (t *Manager[T]) SendEvent(event Event[T]) error {
 			return errors.New("name not found")
 		}
 	case RUNNING:
-		if !t.changeState(event.name, RUNNING) {
+		if !t.reRunningState(event.name, RUNNING) {
 			return errors.New("name not found")
 		}
 
@@ -125,10 +125,10 @@ func (t *Manager[T]) removeState(name string) bool {
 	return false
 }
 
-func (t *Manager[T]) changeState(name string, status EventType) bool {
+func (t *Manager[T]) changeState(name string, state EventType) bool {
 	ts, b := t.getByName(name)
 	if b {
-		ts.State = status
+		ts.State = state
 		t.setRegisteredStatus(ts)
 		return true
 	}
@@ -161,6 +161,17 @@ func (t *Manager[T]) setRegisteredStatus(ts stateManagerData[T]) bool {
 			t.registeredStatusList.Append(ts)
 			return true
 		}
+	}
+	return false
+}
+
+func (t *Manager[T]) reRunningState(name string, state EventType) bool {
+	ts, b := t.getByName(name)
+	if b {
+		ts.State = state
+		ts.ExpiryDate = time.Now().Add(ts.Duration)
+		t.setRegisteredStatus(ts)
+		return true
 	}
 	return false
 }

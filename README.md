@@ -44,7 +44,7 @@ All data exchange of StateManager is completed through NewStateManagerEvent.
 Whenever a new request is added, it needs to be completed through an event.
 
 ```go
-event := stateManager.NewStateManagerEvent(ADD, strconv.Itoa(i), tests, duration, 
+event := stateManager.NewStateManagerEvent(state.ADD, strconv.Itoa(i), tests, duration, 
 	func(events chan Example) {
 	events <- Example{
 	}
@@ -79,6 +79,10 @@ This method is used to send an event to the `StateManager`.
 ```go
 stateManager.SendEvent(event)
 ```
+
+## `Demo`
+
+[Demo](./demo/main.go)
 
 
 ## Contributing
