@@ -128,6 +128,9 @@ func (t *Manager[T]) removeState(name string) bool {
 func (t *Manager[T]) changeState(name string, state EventType) bool {
 	ts, b := t.getByName(name)
 	if b {
+		if ts.State == state {
+			return true
+		}
 		ts.State = state
 		t.setRegisteredStatus(ts)
 		return true
